@@ -1,7 +1,7 @@
 # self-healing-watchdogs
 
 Two production watchdogs built on one pattern: **check cheaply, fix deterministically, and only
-then wake an AI agent** — with a scoped tool allow-list, a cooldown, and verification that the
+then wake an AI agent**, with a scoped tool allow-list, a cooldown, and verification that the
 service is actually back.
 
 Both run unattended on my homelab. They are the scripts, not a framework: read them as worked
@@ -35,7 +35,7 @@ timer ─► cheap check ──healthy──► exit silently
   states that anything else is refused and tells it to report what it would need instead.
 - **Explicit prohibitions:** never delete volumes, never touch database data, never change code
   or config.
-- **Cooldown + lock.** One agent session per 30 minutes, and `flock` so runs never stack — a fix
+- **Cooldown + lock.** One agent session per 30 minutes, and `flock` so runs never stack, a fix
   session can take 20 minutes while the timer fires every 2.
 - **Success is measured, not claimed.** The watchdog re-runs its own checks after the agent exits
   and records FIXED or STILL DOWN. The agent's summary is journal output, not the verdict.
@@ -44,15 +44,15 @@ timer ─► cheap check ──healthy──► exit silently
 
 ## The two examples
 
-**`examples/api-stack-watchdog.sh`** — a Dockerised FastAPI/Postgres/Redis/Celery stack behind a
+**`examples/api-stack-watchdog.sh`**: a Dockerised FastAPI/Postgres/Redis/Celery stack behind a
 Cloudflare tunnel. Checks containers, `pg_isready`, a Redis `PING`, and `/health` both locally and
 publicly. It was written around a real failure: the API started before Postgres finished recovery,
 the uvicorn `--reload` parent survived with no worker, and the container reported "Up" while the
-port reset. A container-level health check would have seen nothing — so the check proves a worker
+port reset. A container-level health check would have seen nothing, so the check proves a worker
 answers, and recovery waits for the database before touching the API. Paired prompt:
 `examples/api-stack-fix-prompt.md`.
 
-**`examples/bluetooth-audio-watchdog.sh`** — a morning-music routine on a Windows machine driven
+**`examples/bluetooth-audio-watchdog.sh`**: a morning-music routine on a Windows machine driven
 over SSH. Its lesson: **"the player is running" is not "sound is audible"**. When the Bluetooth
 link dropped, Windows silently moved playback to the internal speakers and the player kept
 running, so the log said SUCCESS every morning while the room was silent. The check now requires
