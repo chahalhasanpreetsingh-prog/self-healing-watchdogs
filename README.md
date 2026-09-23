@@ -4,7 +4,7 @@ Two production watchdogs built on one pattern: **check cheaply, fix deterministi
 then wake an AI agent**, with a scoped tool allow-list, a cooldown, and verification that the
 service is actually back.
 
-Both run unattended on my homelab. They are the scripts, not a framework: read them as worked
+Both run unattended in production on my self-hosted platform. They are the scripts, not a framework: read them as worked
 examples of how to let an LLM touch production without handing it the keys.
 
 ```
